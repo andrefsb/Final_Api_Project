@@ -9,10 +9,11 @@ namespace Application.Repository
 {
     public interface IEmployeeRepository
     {
-        Employee Create(Employee employee);
-        Employee Read(int id);
-        Employee Update (Employee employee);
-        void Delete(int id);
+        Employee Add(Employee employee);
+        Employee Get(int id);
+        List<Employee> GetAll ();
+        void Remove(int id);
+        
 
     }
 }

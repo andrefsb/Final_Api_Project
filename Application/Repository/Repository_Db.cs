@@ -1,4 +1,5 @@
-﻿using Application.Entities;
+﻿using Application.Context;
+using Application.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,24 +10,34 @@ namespace Application.Repository
 {
     public class Repository_Db : IEmployeeRepository
     {
-        public Employee Create(Employee employee)
+        private readonly SQLiteContext context;
+
+        public Repository_Db(SQLiteContext context)
         {
-            throw new NotImplementedException();
+            this.context = context;
+        }
+        public Employee Add(Employee employee)
+        {
+            employee = context.Employee.Add(employee).Entity;
+            context.SaveChanges();
+            return employee;
         }
 
-        public void Delete(int id)
+        public Employee Get(int id)
         {
-            throw new NotImplementedException();
+            return context.Employee.FirstOrDefault(x => x.Id == id);
         }
 
-        public Employee Read(int id)
+        public List<Employee> GetAll()
         {
-            throw new NotImplementedException();
+            return context.Employee.ToList();
         }
 
-        public Employee Update(Employee employee)
+        public void Remove(int id)
         {
-            throw new NotImplementedException();
+            var employee = Get(id);
+            context.Employee.Remove(employee);
+            context.SaveChanges();
         }
     }
 }

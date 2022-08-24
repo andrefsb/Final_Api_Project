@@ -1,3 +1,8 @@
+using Application.Context;
+using Application.Repository;
+using Final_Project.Controllers;
+using Microsoft.EntityFrameworkCore;
+
 namespace Final_Project
 {
     public class Program
@@ -12,8 +17,16 @@ namespace Final_Project
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddDbContext<SQLiteContext>();
+            builder.Services.AddTransient<IEmployeeRepository,Repository_Db>();
+
 
             var app = builder.Build();
+            using (var scope = app.Services.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetService<SQLiteContext>();
+                dbContext?.Database.Migrate();
+            }
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -25,7 +38,6 @@ namespace Final_Project
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 
