@@ -2,9 +2,13 @@
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            Console.WriteLine("Hello, World!");
+            MenuItem.SetPrompt();
+            Console.Title = "Employee Services:";
+
+            MenuInitialization.InitializeMenu();
+
         }
     }
 }
