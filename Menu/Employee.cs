@@ -1,6 +1,7 @@
 ﻿using Application.Repository;
 using Sharprompt;
 using System.Net.Http.Json;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -85,7 +86,7 @@ namespace Menu
             }
             
         }
-        public static void DeleteEmployee()
+        public static async void DeleteEmployee()
 
         {
             HttpClient httpClient = new HttpClient();
@@ -93,10 +94,11 @@ namespace Menu
             var employeeId = Console.ReadLine();
             var result = EmployeeAnalysis(employeeId).Result;
             Console.WriteLine($"Confirm Employee {employeeId} deletion (Y/N)?");
-            string response = Console.ReadLine().ToUpper();
-            if(response == "Y")
+            string choice = Console.ReadLine().ToUpper();
+            if (choice == "Y")
             {
-                httpClient.DeleteAsync($"http://localhost:5186//delete/{employeeId}");
+
+                httpClient.DeleteAsync("http://localhost:5186/delete/+"+employeeId);
                 Console.WriteLine($"Employee {employeeId} deletion was successfull.");
             }
             else
