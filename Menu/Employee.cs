@@ -47,7 +47,6 @@ namespace Menu
 
             httpClient.BaseAddress = new Uri("http://localhost:5186/");
             var response = httpClient.PostAsJsonAsync("/add", employee).Result;
-
         }
 
         public static void GetEmployee()
@@ -98,11 +97,11 @@ namespace Menu
             if(response == "Y")
             {
                 httpClient.DeleteAsync($"http://localhost:5186//delete/{employeeId}");
-                Console.WriteLine($"Employee {employeeId} deletion was sucessfull.");
+                Console.WriteLine($"Employee {employeeId} deletion was successfull.");
             }
             else
             {
-                Console.WriteLine("Deletion not sucessfull.");
+                Console.WriteLine("Deletion not successfull.");
             }
 
         }
