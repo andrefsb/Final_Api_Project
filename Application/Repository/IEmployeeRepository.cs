@@ -13,6 +13,8 @@ namespace Application.Repository
         Employee Get(int id);
         List<Employee> GetAll ();
         void Remove(int id);
+        void Edit(int id,Employee employee);
+
         
 
     }

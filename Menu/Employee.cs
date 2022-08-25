@@ -45,7 +45,6 @@ namespace Menu
             Console.Write("Ip Adress: ");
             string ip_adress = Console.ReadLine();
             Employee employee = new Employee(first_name, last_name, email, gender, ip_adress);
-
             httpClient.BaseAddress = new Uri("http://localhost:5186/");
             var response = httpClient.PostAsJsonAsync("/add", employee).Result;
         }
@@ -72,7 +71,7 @@ namespace Menu
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine(ex.Message);
-                throw;
+                throw new ArgumentException(ex.Message);
             }
         }
         public static async Task<Employee> EmployeeAnalysis(string employeeId)
@@ -91,7 +90,7 @@ namespace Menu
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine(ex.Message);
-                throw;
+                throw new ArgumentException(ex.Message);
             }
             
         }
@@ -138,6 +137,54 @@ namespace Menu
             var message = await response.Content.ReadAsStringAsync();
             var result = JsonSerializer.Deserialize<List <Employee>>(message);
             return result;
+        }
+        public async static void EditEmployee()
+        {
+            Console.Write("Insert Employee Id to Edit: ");
+            var employeeId = Console.ReadLine();
+            FindEmployeeData(employeeId);
+            var result = EmployeeAnalysis(employeeId).Result;
+            HttpClient httpClient = new HttpClient();
+            Console.Write("First Name");
+            Console.Write($"({result.First_name}): ");
+            string first_name = Console.ReadLine();
+            result.First_name = string.IsNullOrWhiteSpace(first_name) ? result.First_name : first_name;
+            Console.Write("Last Name");
+            Console.Write($"({result.Last_name}): ");
+            string last_name = Console.ReadLine();
+            result.Last_name = string.IsNullOrWhiteSpace(last_name) ? result.Last_name : last_name;
+            Console.Write("Email");           
+            Console.Write($"({result.Email}): ");
+            string email = Console.ReadLine();
+            result.Email = string.IsNullOrWhiteSpace(email) ? result.Email : email;
+            string gender = Prompt.Select<EnumGenders>("Gender: ").ToString();
+            Console.Write("Ip Adress");
+            Console.Write($"({result.Ip_address}): ");
+            string ip_adress = Console.ReadLine();
+            result.Ip_address = string.IsNullOrWhiteSpace(ip_adress) ? result.Ip_address : ip_adress;
+            Console.WriteLine($"\nConfirm Employee {employeeId} edition (Y/N)?");
+            string choice = Console.ReadLine().ToUpper();
+
+            if (choice == "Y")
+            {
+                try
+                {
+                   var message = await httpClient.PutAsJsonAsync("http://localhost:5186/edit/" + result.Id, result);
+                    if (message.IsSuccessStatusCode)
+                    {
+                        Console.WriteLine($"Employee {employeeId} edition was successfull.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Edition not successfull.");
+                    }
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+            
         }
     }
 }

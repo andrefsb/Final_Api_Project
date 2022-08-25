@@ -2,6 +2,7 @@ using Application.Context;
 using Application.Entities;
 using Application.Repository;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace Final_Project.Controllers
 {
@@ -41,11 +42,21 @@ namespace Final_Project.Controllers
         {
             return repository.Add(employee);
         }
-        //[HttpGet()]
-        //[Route("/genders")]
-        //public List<string> GetGenders()
-        //{
-        //    return repository.GetAll().Select(x => x.Gender).Distinct().ToList();
-        //}
+        [HttpPut()]
+        [Route("/edit/{id:int}")]
+        public void Edit(int id, Employee employee)
+        {
+            //if (id != employee.Id)
+            //{
+            //HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            //}
+            //else
+            //{
+          
+            repository.Edit(id,employee);
+            HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
+            //}
+
+        }
     }
 }

@@ -1,10 +1,7 @@
 ﻿using Application.Context;
 using Application.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net.Http.Json;
+
 
 namespace Application.Repository
 {
@@ -37,6 +34,18 @@ namespace Application.Repository
         {
             var employee = Get(id);
             context.Employee.Remove(employee);
+            context.SaveChanges();
+        }
+
+        public void Edit(int id, Employee employee)
+        {
+            var valor = Get(id);
+            valor.First_name = employee.First_name;
+            valor.Last_name = employee.Last_name;
+            valor.Email = employee.Email;
+            valor.Gender = employee.Gender;
+            valor.Ip_address = employee.Ip_address;
+            context.Employee.Update(valor);
             context.SaveChanges();
         }
     }
