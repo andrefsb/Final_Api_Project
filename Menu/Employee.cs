@@ -51,25 +51,34 @@ namespace Menu
         }
 
         public static void GetEmployee()
-
         {
             Console.Write("Insert Employee Id: ");
             var employeeId = Console.ReadLine();
-            var result = EmployeeAnalysis(employeeId).Result;
-            Console.WriteLine("Employee Data:"
-                    + "\nId: " + result.Id
-                   + "\nFirst Name: " + result.First_name
-                   + "\nLast Name: " + result.Last_name
-                   + "\nEmail: " + result.Email
-                   + "\nGender: " + result.Gender
-                   + "\nIp Adress: " + result.Ip_address);
+            FindEmployeeData(employeeId);
+        }
+        public static void FindEmployeeData(string employeeId)
+        {
+            try
+            {
+                var result = EmployeeAnalysis(employeeId).Result;
+                Console.WriteLine("Employee Data:"
+                        + "\nId: " + result.Id
+                       + "\nFirst Name: " + result.First_name
+                       + "\nLast Name: " + result.Last_name
+                       + "\nEmail: " + result.Email
+                       + "\nGender: " + result.Gender
+                       + "\nIp Adress: " + result.Ip_address);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+                throw;
+            }
         }
         public static async Task<Employee> EmployeeAnalysis(string employeeId)
         {
             HttpClient httpClient = new HttpClient();
-            
-            //httpClient.PostAsync("", content);
-            //httpClient.DeleteAsync("endereço/delete/+"id);
+
             try
             {
                 var response = await httpClient.GetAsync($"http://localhost:5186/{employeeId}");
@@ -92,6 +101,7 @@ namespace Menu
             HttpClient httpClient = new HttpClient();
             Console.Write("Insert Employee Id to Delete: ");
             var employeeId = Console.ReadLine();
+            FindEmployeeData(employeeId);
             var result = EmployeeAnalysis(employeeId).Result;
             Console.WriteLine($"Confirm Employee {employeeId} deletion (Y/N)?");
             string choice = Console.ReadLine().ToUpper();
