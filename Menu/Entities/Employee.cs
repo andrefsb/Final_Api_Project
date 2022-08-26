@@ -1,11 +1,9 @@
-﻿using Application.Repository;
-using Menu.Enums;
+﻿using Menu.Enums;
 using Sharprompt;
 using System.Net.Http.Json;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+
 
 namespace Menu.Entities
 {
@@ -47,7 +45,15 @@ namespace Menu.Entities
             string ip_adress = Console.ReadLine();
             Employee employee = new Employee(first_name, last_name, email, gender, ip_adress);
             httpClient.BaseAddress = new Uri("http://localhost:5186/");
-            var response = httpClient.PostAsJsonAsync("/add", employee).Result;
+            var message = httpClient.PostAsJsonAsync("/add", employee).Result;
+            if(message.IsSuccessStatusCode)
+            {
+                Console.WriteLine("New employee successfully created.");
+            }
+            else
+            {
+                Console.WriteLine("Unable to create new employee.");
+            }
         }
 
         public static void GetEmployee()
@@ -61,13 +67,7 @@ namespace Menu.Entities
             try
             {
                 var result = EmployeeAnalysis(employeeId).Result;
-                Console.WriteLine("Employee Data:"
-                        + "\nId: " + result.Id
-                       + "\nFirst Name: " + result.First_name
-                       + "\nLast Name: " + result.Last_name
-                       + "\nEmail: " + result.Email
-                       + "\nGender: " + result.Gender
-                       + "\nIp Adress: " + result.Ip_address);
+                WriteEmployeeData(result);
                 return true;
             }
             catch (Exception ex)
@@ -115,9 +115,15 @@ namespace Menu.Entities
                 string choice = Console.ReadLine().ToUpper();
                 if (choice == "Y")
                 {
-
-                    httpClient.DeleteAsync("http://localhost:5186/delete/+" + employeeId);
-                    Console.WriteLine($"Employee {employeeId} deletion was successfull.");
+                    var message = await httpClient.DeleteAsync("http://localhost:5186/delete/+" + employeeId);
+                    if (message.IsSuccessStatusCode)
+                    {
+                        Console.WriteLine($"Employee {employeeId} deletion was successfull.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Deletion not successfull.");
+                    }  
                 }
                 else
                 {
@@ -130,13 +136,7 @@ namespace Menu.Entities
             var response = RequestAllEmployees().Result;
             foreach (var result in response)
             {
-                Console.WriteLine("\nEmployee Data:"
-                     + "\nId: " + result.Id
-                    + "\nFirst Name: " + result.First_name
-                    + "\nLast Name: " + result.Last_name
-                    + "\nEmail: " + result.Email
-                    + "\nGender: " + result.Gender
-                    + "\nIp Adress: " + result.Ip_address); ;
+                WriteEmployeeData(result);
             }
         }
         public static async Task<List<Employee>> RequestAllEmployees()
@@ -199,6 +199,16 @@ namespace Menu.Entities
                     }
                 }
             }
+        }
+        public static void WriteEmployeeData(Employee result)
+        {
+            Console.WriteLine("\nEmployee Data:"
+                     + "\nId: " + result.Id
+                    + "\nFirst Name: " + result.First_name
+                    + "\nLast Name: " + result.Last_name
+                    + "\nEmail: " + result.Email
+                    + "\nGender: " + result.Gender
+                    + "\nIp Adress: " + result.Ip_address);
         }
     }
 }
