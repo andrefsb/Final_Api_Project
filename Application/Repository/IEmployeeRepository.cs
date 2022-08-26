@@ -7,11 +7,12 @@ namespace Application.Repository
     {
         Employee Add(Employee employee);
         Employee Get(int id);
-        List<Employee> GetAll ();
+        List<Employee> GetByName(string name);
+        List<Employee> GetAll();
         void Remove(int id);
-        void Edit(int id,Employee employee);
+        void Edit(int id, Employee employee);
 
-        
+
 
     }
 }

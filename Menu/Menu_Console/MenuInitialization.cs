@@ -27,7 +27,7 @@ namespace Menu.Menu_Console
             var menu = new MenuItem("Employee Search Menu");
 
             menu.Add(new MenuItem("Find employee by Id", Employee.GetEmployee));
-            menu.Add(new MenuItem("Find Employee by Name", null));
+            menu.Add(new MenuItem("Find Employee by Name", Employee.GetEmployeeByName));
             menu.Add(new MenuItem("Find employee by Gender", null));
             menu.Add(new MenuItem("Find employee by Ip Adress", null));
 

@@ -30,7 +30,7 @@ namespace Menu.Entities
             Gender = gender;
             Ip_address = ip_address;
         }
-
+        #region Add Employee
         public async static void AddEmployee()
         {
             HttpClient httpClient = new HttpClient();
@@ -46,7 +46,7 @@ namespace Menu.Entities
             Employee employee = new Employee(first_name, last_name, email, gender, ip_adress);
             httpClient.BaseAddress = new Uri("http://localhost:5186/");
             var message = httpClient.PostAsJsonAsync("/add", employee).Result;
-            if(message.IsSuccessStatusCode)
+            if (message.IsSuccessStatusCode)
             {
                 Console.WriteLine("New employee successfully created.");
             }
@@ -55,13 +55,41 @@ namespace Menu.Entities
                 Console.WriteLine("Unable to create new employee.");
             }
         }
+        #endregion
 
+        #region Get Employee by Id
         public static void GetEmployee()
         {
             Console.Write("Insert Employee Id: ");
             var employeeId = Console.ReadLine();
             FindEmployeeData(employeeId);
         }
+        #endregion
+
+        #region Get Employee by Name
+        public static void GetEmployeeByName()
+        {
+            Console.Write("Insert Employee Name: ");
+            var employeeName = Console.ReadLine();
+            try
+            {
+                var response = RequestAllEmployeesBy(employeeName).Result;
+                foreach (var result in response)
+                {
+                    WriteEmployeeData(result);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+                Console.WriteLine($"Employee {employeeName} not found.");
+
+            }
+        }
+        #endregion
+
+        #region Find Employee
         public static bool FindEmployeeData(string employeeId)
         {
             try
@@ -96,8 +124,11 @@ namespace Menu.Entities
                 System.Diagnostics.Debug.WriteLine(ex.Message);
                 throw new ArgumentException(ex.Message);
             }
-
+            
         }
+        #endregion
+
+        #region Delete Employee
         public static async void DeleteEmployee()
 
         {
@@ -123,7 +154,7 @@ namespace Menu.Entities
                     else
                     {
                         Console.WriteLine("Deletion not successfull.");
-                    }  
+                    }
                 }
                 else
                 {
@@ -131,6 +162,9 @@ namespace Menu.Entities
                 }
             }
         }
+        #endregion
+
+        #region List All Employees
         public static void ListAllEmployees()
         {
             var response = RequestAllEmployees().Result;
@@ -147,6 +181,20 @@ namespace Menu.Entities
             var result = JsonSerializer.Deserialize<List<Employee>>(message);
             return result;
         }
+        #endregion
+
+        #region Request all Employees By
+        public static async Task<List<Employee>> RequestAllEmployeesBy(string entry)
+        {
+            HttpClient httpClient = new HttpClient();
+            var response = await httpClient.GetAsync($"http://localhost:5186/getall/{entry}");
+            var message = await response.Content.ReadAsStringAsync();
+            var result = JsonSerializer.Deserialize<List<Employee>>(message);
+            return result;
+        }
+        #endregion
+
+        #region Edit Employee Data
         public async static void EditEmployee()
         {
             Console.Write("Insert Employee Id to Edit: ");
@@ -200,6 +248,9 @@ namespace Menu.Entities
                 }
             }
         }
+        #endregion
+
+        #region Write Employee Data
         public static void WriteEmployeeData(Employee result)
         {
             Console.WriteLine("\nEmployee Data:"
@@ -210,6 +261,7 @@ namespace Menu.Entities
                     + "\nGender: " + result.Gender
                     + "\nIp Adress: " + result.Ip_address);
         }
+        #endregion
     }
 }
 

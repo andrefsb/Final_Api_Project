@@ -23,6 +23,13 @@ namespace Application.Repository
         {
             return context.Employee.FirstOrDefault(x => x.Id == id);
         }
+        public List<Employee> GetByName(string name)
+        {
+            return context.Employee
+                .Where(x => x.First_name.Contains(name) || x.Last_name.Contains(name))
+                .OrderBy(x => x.Id)
+                .ToList();
+        }
 
         public List<Employee> GetAll()
         {

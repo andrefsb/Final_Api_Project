@@ -23,6 +23,13 @@ namespace Final_Project.Controllers
         {
             return repository.Get(id);
         }
+        [HttpGet()]
+        [Route("/getall/{name}")]
+        public List<Employee> GetByName(string name)
+        {
+            return repository.GetByName(name);
+        }
+
         [HttpDelete()]
         [Route("/delete/{id}")]
         public void Delete(int id)
