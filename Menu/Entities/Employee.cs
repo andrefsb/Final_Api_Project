@@ -56,7 +56,7 @@ namespace Menu.Entities
             var employeeId = Console.ReadLine();
             FindEmployeeData(employeeId);
         }
-        public static void FindEmployeeData(string employeeId)
+        public static bool FindEmployeeData(string employeeId)
         {
             try
             {
@@ -68,13 +68,16 @@ namespace Menu.Entities
                        + "\nEmail: " + result.Email
                        + "\nGender: " + result.Gender
                        + "\nIp Adress: " + result.Ip_address);
+                return true;
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine(ex.Message);
-                throw new ArgumentException(ex.Message);
+                Console.WriteLine($"Employee {employeeId} not found.");
+                return false;
             }
         }
+        
         public static async Task<Employee> EmployeeAnalysis(string employeeId)
         {
             HttpClient httpClient = new HttpClient();
@@ -101,21 +104,26 @@ namespace Menu.Entities
             HttpClient httpClient = new HttpClient();
             Console.Write("Insert Employee Id to Delete: ");
             var employeeId = Console.ReadLine();
-            FindEmployeeData(employeeId);
-            var result = EmployeeAnalysis(employeeId).Result;
-            Console.WriteLine($"Confirm Employee {employeeId} deletion (Y/N)?");
-            string choice = Console.ReadLine().ToUpper();
-            if (choice == "Y")
+            if (!FindEmployeeData(employeeId))
             {
-
-                httpClient.DeleteAsync("http://localhost:5186/delete/+" + employeeId);
-                Console.WriteLine($"Employee {employeeId} deletion was successfull.");
+                Console.WriteLine($"Unable to delete not found employee ({employeeId}).");
             }
             else
             {
-                Console.WriteLine("Deletion not successfull.");
-            }
+                var result = EmployeeAnalysis(employeeId).Result;
+                Console.WriteLine($"Confirm Employee {employeeId} deletion (Y/N)?");
+                string choice = Console.ReadLine().ToUpper();
+                if (choice == "Y")
+                {
 
+                    httpClient.DeleteAsync("http://localhost:5186/delete/+" + employeeId);
+                    Console.WriteLine($"Employee {employeeId} deletion was successfull.");
+                }
+                else
+                {
+                    Console.WriteLine("Deletion not successfull.");
+                }
+            }
         }
         public static void ListAllEmployees()
         {
@@ -143,49 +151,54 @@ namespace Menu.Entities
         {
             Console.Write("Insert Employee Id to Edit: ");
             var employeeId = Console.ReadLine();
-            FindEmployeeData(employeeId);
-            var result = EmployeeAnalysis(employeeId).Result;
-            HttpClient httpClient = new HttpClient();
-            Console.Write("First Name");
-            Console.Write($"({result.First_name}): ");
-            string first_name = Console.ReadLine();
-            result.First_name = string.IsNullOrWhiteSpace(first_name) ? result.First_name : first_name;
-            Console.Write("Last Name");
-            Console.Write($"({result.Last_name}): ");
-            string last_name = Console.ReadLine();
-            result.Last_name = string.IsNullOrWhiteSpace(last_name) ? result.Last_name : last_name;
-            Console.Write("Email");
-            Console.Write($"({result.Email}): ");
-            string email = Console.ReadLine();
-            result.Email = string.IsNullOrWhiteSpace(email) ? result.Email : email;
-            string gender = Prompt.Select<EnumGenders>("Gender: ").ToString();
-            Console.Write("Ip Adress");
-            Console.Write($"({result.Ip_address}): ");
-            string ip_adress = Console.ReadLine();
-            result.Ip_address = string.IsNullOrWhiteSpace(ip_adress) ? result.Ip_address : ip_adress;
-            Console.WriteLine($"\nConfirm Employee {employeeId} edition (Y/N)?");
-            string choice = Console.ReadLine().ToUpper();
-
-            if (choice == "Y")
+            if (!FindEmployeeData(employeeId))
             {
-                try
+                Console.WriteLine($"Unable to edit not found employee ({employeeId}).");
+            }
+            else
+            {
+                var result = EmployeeAnalysis(employeeId).Result;
+                HttpClient httpClient = new HttpClient();
+                Console.Write("First Name");
+                Console.Write($"({result.First_name}): ");
+                string first_name = Console.ReadLine();
+                result.First_name = string.IsNullOrWhiteSpace(first_name) ? result.First_name : first_name;
+                Console.Write("Last Name");
+                Console.Write($"({result.Last_name}): ");
+                string last_name = Console.ReadLine();
+                result.Last_name = string.IsNullOrWhiteSpace(last_name) ? result.Last_name : last_name;
+                Console.Write("Email");
+                Console.Write($"({result.Email}): ");
+                string email = Console.ReadLine();
+                result.Email = string.IsNullOrWhiteSpace(email) ? result.Email : email;
+                string gender = Prompt.Select<EnumGenders>("Gender: ").ToString();
+                Console.Write("Ip Adress");
+                Console.Write($"({result.Ip_address}): ");
+                string ip_adress = Console.ReadLine();
+                result.Ip_address = string.IsNullOrWhiteSpace(ip_adress) ? result.Ip_address : ip_adress;
+                Console.WriteLine($"\nConfirm Employee {employeeId} edition (Y/N)?");
+                string choice = Console.ReadLine().ToUpper();
+
+                if (choice == "Y")
                 {
-                    var message = await httpClient.PutAsJsonAsync("http://localhost:5186/edit/" + result.Id, result);
-                    if (message.IsSuccessStatusCode)
+                    try
                     {
-                        Console.WriteLine($"Employee {employeeId} edition was successfull.");
+                        var message = await httpClient.PutAsJsonAsync("http://localhost:5186/edit/" + result.Id, result);
+                        if (message.IsSuccessStatusCode)
+                        {
+                            Console.WriteLine($"Employee {employeeId} edition was successfull.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Edition not successfull.");
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        Console.WriteLine("Edition not successfull.");
+                        Console.WriteLine(ex.Message);
                     }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
                 }
             }
-
         }
     }
 }

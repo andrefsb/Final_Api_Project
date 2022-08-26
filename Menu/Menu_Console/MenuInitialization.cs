@@ -11,18 +11,18 @@ namespace Menu.Menu_Console
     {
         public static void InitializeMenu()
         {
-            var menu = new MenuItem("Menu Principal");
+            var menu = new MenuItem("Main Menu");
 
-            var employees = new MenuItem("Funcionários");
-            employees.Add(new MenuItem("Encontrar Funcionário", Employee.GetEmployee));
-            employees.Add(new MenuItem("Listar Funcionários", Employee.ListAllEmployees));
-            employees.Add(new MenuItem("Cadastrar Funcionário", Employee.AddEmployee));
-            employees.Add(new MenuItem("Editar Funcionário", Employee.EditEmployee));
-            employees.Add(new MenuItem("Remover Funcionário", Employee.DeleteEmployee));
+            var employees = new MenuItem("Employees");
+            employees.Add(new MenuItem("Find employee", Employee.GetEmployee));
+            employees.Add(new MenuItem("List all employees", Employee.ListAllEmployees));
+            employees.Add(new MenuItem("Create new employee", Employee.AddEmployee));
+            employees.Add(new MenuItem("Edit employee", Employee.EditEmployee));
+            employees.Add(new MenuItem("Remove employee", Employee.DeleteEmployee));
 
             menu.Add(employees);
 
-            menu.Add(new MenuItem("Sair", () => Environment.Exit(0)));
+            menu.Add(new MenuItem("Exit", () => Environment.Exit(0)));
 
             menu.Execute();
         }
