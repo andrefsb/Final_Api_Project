@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Menu
+namespace Menu.Menu_Console
 {
     public class MenuItem
     {

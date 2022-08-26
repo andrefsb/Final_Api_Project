@@ -1,4 +1,6 @@
-﻿namespace Menu
+﻿using Menu.Menu_Console;
+
+namespace Menu
 {
     internal class Program
     {

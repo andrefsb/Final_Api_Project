@@ -1,4 +1,5 @@
 ﻿using Application.Repository;
+using Menu.Enums;
 using Sharprompt;
 using System.Net.Http.Json;
 using System.Text;
@@ -6,12 +7,12 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Menu
+namespace Menu.Entities
 {
     internal class Employee
     {
         [JsonPropertyName("id")]
-        public int Id { get;  set; }
+        public int Id { get; set; }
         [JsonPropertyName("first_name")]
         public string First_name { get; set; }
         [JsonPropertyName("last_name")]
@@ -84,7 +85,7 @@ namespace Menu
                 var code = response.StatusCode;
                 var message = await response.Content.ReadAsStringAsync();
                 var result = JsonSerializer.Deserialize<Employee>(message);
-                
+
                 return result;
             }
             catch (Exception ex)
@@ -92,7 +93,7 @@ namespace Menu
                 System.Diagnostics.Debug.WriteLine(ex.Message);
                 throw new ArgumentException(ex.Message);
             }
-            
+
         }
         public static async void DeleteEmployee()
 
@@ -107,7 +108,7 @@ namespace Menu
             if (choice == "Y")
             {
 
-                httpClient.DeleteAsync("http://localhost:5186/delete/+"+employeeId);
+                httpClient.DeleteAsync("http://localhost:5186/delete/+" + employeeId);
                 Console.WriteLine($"Employee {employeeId} deletion was successfull.");
             }
             else
@@ -119,7 +120,7 @@ namespace Menu
         public static void ListAllEmployees()
         {
             var response = RequestAllEmployees().Result;
-            foreach(var result in response)
+            foreach (var result in response)
             {
                 Console.WriteLine("\nEmployee Data:"
                      + "\nId: " + result.Id
@@ -130,12 +131,12 @@ namespace Menu
                     + "\nIp Adress: " + result.Ip_address); ;
             }
         }
-        public static async Task <List<Employee>> RequestAllEmployees()
+        public static async Task<List<Employee>> RequestAllEmployees()
         {
             HttpClient httpClient = new HttpClient();
             var response = await httpClient.GetAsync($"http://localhost:5186/getall");
             var message = await response.Content.ReadAsStringAsync();
-            var result = JsonSerializer.Deserialize<List <Employee>>(message);
+            var result = JsonSerializer.Deserialize<List<Employee>>(message);
             return result;
         }
         public async static void EditEmployee()
@@ -153,7 +154,7 @@ namespace Menu
             Console.Write($"({result.Last_name}): ");
             string last_name = Console.ReadLine();
             result.Last_name = string.IsNullOrWhiteSpace(last_name) ? result.Last_name : last_name;
-            Console.Write("Email");           
+            Console.Write("Email");
             Console.Write($"({result.Email}): ");
             string email = Console.ReadLine();
             result.Email = string.IsNullOrWhiteSpace(email) ? result.Email : email;
@@ -169,7 +170,7 @@ namespace Menu
             {
                 try
                 {
-                   var message = await httpClient.PutAsJsonAsync("http://localhost:5186/edit/" + result.Id, result);
+                    var message = await httpClient.PutAsJsonAsync("http://localhost:5186/edit/" + result.Id, result);
                     if (message.IsSuccessStatusCode)
                     {
                         Console.WriteLine($"Employee {employeeId} edition was successfull.");
@@ -179,12 +180,12 @@ namespace Menu
                         Console.WriteLine("Edition not successfull.");
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
                 }
             }
-            
+
         }
     }
 }
