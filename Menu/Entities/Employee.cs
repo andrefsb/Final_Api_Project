@@ -70,22 +70,21 @@ namespace Menu.Entities
         public static void GetEmployeeByName()
         {
             Console.Write("Insert Employee Name: ");
-            var employeeName = Console.ReadLine();
-            try
-            {
-                var response = RequestAllEmployeesBy(employeeName).Result;
-                foreach (var result in response)
-                {
-                    WriteEmployeeData(result);
-                }
+            var name = Console.ReadLine();
+            string url = $"http://localhost:5186/getall/{name}";
+            GetEmployeeBy(name, url);
 
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine(ex.Message);
-                Console.WriteLine($"Employee {employeeName} not found.");
+        }
+        #endregion
 
-            }
+        #region Get Employee by Gender
+        public static void GetEmployeeByGender()
+        {
+            Console.Write("Insert Employee Gender: ");
+            string gender = Prompt.Select<EnumGenders>("Gender: ").ToString();
+            string url = $"http://localhost:5186/getallg/{gender}";
+            GetEmployeeBy(gender, url);
+
         }
         #endregion
 
@@ -105,7 +104,7 @@ namespace Menu.Entities
                 return false;
             }
         }
-        
+
         public static async Task<Employee> EmployeeAnalysis(string employeeId)
         {
             HttpClient httpClient = new HttpClient();
@@ -124,7 +123,7 @@ namespace Menu.Entities
                 System.Diagnostics.Debug.WriteLine(ex.Message);
                 throw new ArgumentException(ex.Message);
             }
-            
+
         }
         #endregion
 
@@ -184,10 +183,30 @@ namespace Menu.Entities
         #endregion
 
         #region Request all Employees By
-        public static async Task<List<Employee>> RequestAllEmployeesBy(string entry)
+        public static void GetEmployeeBy(string entry, string url)
+        {
+            
+            try
+            {
+                var response = RequestAllEmployeesBy(entry, url).Result;
+                foreach (var result in response)
+                {
+                    WriteEmployeeData(result);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+                Console.WriteLine($"Employee {entry} not found.");
+
+            }
+        }
+
+        public static async Task<List<Employee>> RequestAllEmployeesBy(string entry, string url)
         {
             HttpClient httpClient = new HttpClient();
-            var response = await httpClient.GetAsync($"http://localhost:5186/getall/{entry}");
+            var response = await httpClient.GetAsync(url);
             var message = await response.Content.ReadAsStringAsync();
             var result = JsonSerializer.Deserialize<List<Employee>>(message);
             return result;

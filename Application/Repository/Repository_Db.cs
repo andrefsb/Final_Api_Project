@@ -30,7 +30,13 @@ namespace Application.Repository
                 .OrderBy(x => x.Id)
                 .ToList();
         }
-
+        public List<Employee> GetByGender(string gender)
+        {
+            return context.Employee
+                .Where(x => x.Gender == gender)
+                .OrderBy(x => x.Id)
+                .ToList();
+        }
         public List<Employee> GetAll()
         {
             return context.Employee.ToList();

@@ -29,6 +29,12 @@ namespace Final_Project.Controllers
         {
             return repository.GetByName(name);
         }
+        [HttpGet()]
+        [Route("/getallg/{gender}")]
+        public List<Employee> GetByGender(string gender)
+        {
+            return repository.GetByGender(gender);
+        }
 
         [HttpDelete()]
         [Route("/delete/{id}")]
