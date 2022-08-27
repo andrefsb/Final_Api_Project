@@ -77,6 +77,16 @@ namespace Menu.Entities
         }
         #endregion
 
+        #region Get Employee by Ip
+        public static void GetEmployeeByIp()
+        {
+            Console.Write("Insert Employee Ip: ");
+            var ip = Console.ReadLine();
+            string url = $"http://localhost:5186/getallip/{ip}";
+            GetEmployeeBy(ip, url);
+        }
+        #endregion
+
         #region Get Employee by Gender
         public static void GetEmployeeByGender()
         {
@@ -189,11 +199,17 @@ namespace Menu.Entities
             try
             {
                 var response = RequestAllEmployeesBy(entry, url).Result;
-                foreach (var result in response)
+                if (response.Count > 0)
                 {
-                    WriteEmployeeData(result);
+                    foreach (var result in response)
+                    {
+                        WriteEmployeeData(result);
+                    }
                 }
-
+                else
+                {
+                    Console.WriteLine($"Employee {entry} not found.");
+                }
             }
             catch (Exception ex)
             {

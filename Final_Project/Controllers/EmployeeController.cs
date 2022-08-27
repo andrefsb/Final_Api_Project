@@ -35,7 +35,12 @@ namespace Final_Project.Controllers
         {
             return repository.GetByGender(gender);
         }
-
+        [HttpGet()]
+        [Route("/getallip/{ip}")]
+        public List<Employee> GetByIp(string ip)
+        {
+            return repository.GetByIp(ip);
+        }
         [HttpDelete()]
         [Route("/delete/{id}")]
         public void Delete(int id)

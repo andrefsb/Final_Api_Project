@@ -26,7 +26,7 @@ namespace Application.Repository
         public List<Employee> GetByName(string name)
         {
             return context.Employee
-                .Where(x => x.First_name.Contains(name) || x.Last_name.Contains(name))
+                .Where(x => x.First_name.Contains(name) || x.Last_name.Contains(name) || ((x.First_name + " " + x.Last_name).Contains(name)))
                 .OrderBy(x => x.Id)
                 .ToList();
         }
@@ -34,6 +34,13 @@ namespace Application.Repository
         {
             return context.Employee
                 .Where(x => x.Gender == gender)
+                .OrderBy(x => x.Id)
+                .ToList();
+        }
+        public List<Employee> GetByIp(string ip)
+        {
+            return context.Employee
+                .Where(x => x.Ip_address.Contains(ip))
                 .OrderBy(x => x.Id)
                 .ToList();
         }

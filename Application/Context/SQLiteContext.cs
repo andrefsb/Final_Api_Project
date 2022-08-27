@@ -14,18 +14,7 @@ namespace Application.Context
         {
             modelBuilder.Entity<Employee>()
               .HasKey(p => new { p.Id });
-            //modelBuilder.Entity<Employee>()
-            //    .HasData(GetEmployeeInitialData());
         }
-
-        //private List<Employee> GetEmployeeInitialData()
-        //{
-        //    using var reader = new StreamReader("./data.json");
-        //    var json = reader.ReadToEnd();
-        //    var data = JsonConvert.DeserializeObject<List<Employee>>(json);
-        //    return data;
-        //}
-
         public DbSet<Employee>? Employee { get; set; }
     }
 }
