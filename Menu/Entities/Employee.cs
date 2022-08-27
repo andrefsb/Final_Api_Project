@@ -77,6 +77,17 @@ namespace Menu.Entities
         }
         #endregion
 
+        #region Get Employee by Email
+
+        public static void GetEmployeeByEmail()
+        {
+            Console.Write("Insert Employee Email: ");
+            var email = Console.ReadLine();
+            string url = $"http://localhost:5186/getalle/{email}";
+            GetEmployeeBy(email, url);
+        }
+        #endregion
+
         #region Get Employee by Ip
         public static void GetEmployeeByIp()
         {
@@ -103,8 +114,9 @@ namespace Menu.Entities
         {
             try
             {
+                int cont = 1;
                 var result = EmployeeAnalysis(employeeId).Result;
-                WriteEmployeeData(result);
+                WriteEmployeeData(cont,result);
                 return true;
             }
             catch (Exception ex)
@@ -176,10 +188,12 @@ namespace Menu.Entities
         #region List All Employees
         public static void ListAllEmployees()
         {
+            int cont = 1;
             var response = RequestAllEmployees().Result;
             foreach (var result in response)
             {
-                WriteEmployeeData(result);
+                WriteEmployeeData(cont,result);
+                cont++;
             }
         }
         public static async Task<List<Employee>> RequestAllEmployees()
@@ -195,15 +209,17 @@ namespace Menu.Entities
         #region Request all Employees By
         public static void GetEmployeeBy(string entry, string url)
         {
-            
+
             try
             {
+                int cont = 1;
                 var response = RequestAllEmployeesBy(entry, url).Result;
                 if (response.Count > 0)
                 {
                     foreach (var result in response)
                     {
-                        WriteEmployeeData(result);
+                        WriteEmployeeData(cont,result);
+                        cont++;
                     }
                 }
                 else
@@ -286,16 +302,17 @@ namespace Menu.Entities
         #endregion
 
         #region Write Employee Data
-        public static void WriteEmployeeData(Employee result)
+        public static void WriteEmployeeData(int cont, Employee result)
         {
-            Console.WriteLine("\nEmployee Data:"
+            Console.WriteLine($"\nEmployee ({cont}) Data:"
                      + "\nId: " + result.Id
                     + "\nFirst Name: " + result.First_name
                     + "\nLast Name: " + result.Last_name
                     + "\nEmail: " + result.Email
                     + "\nGender: " + result.Gender
-                    + "\nIp Adress: " + result.Ip_address);
+                    + "\nIp Adress: " + result.Ip_address);     
         }
+        
         #endregion
     }
 }

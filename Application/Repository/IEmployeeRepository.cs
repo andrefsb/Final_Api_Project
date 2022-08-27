@@ -9,6 +9,7 @@ namespace Application.Repository
         Employee Get(int id);
         List<Employee> GetByName(string name);
         List<Employee> GetByGender(string gender);
+        List<Employee> GetByEmail(string email);
         List<Employee> GetByIp(string ip);
         List<Employee> GetAll();
         void Remove(int id);

@@ -36,6 +36,12 @@ namespace Final_Project.Controllers
             return repository.GetByGender(gender);
         }
         [HttpGet()]
+        [Route("/getalle/{email}")]
+        public List<Employee> GetByEmail(string email)
+        {
+            return repository.GetByEmail(email);
+        }
+        [HttpGet()]
         [Route("/getallip/{ip}")]
         public List<Employee> GetByIp(string ip)
         {

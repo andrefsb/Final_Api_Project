@@ -37,6 +37,13 @@ namespace Application.Repository
                 .OrderBy(x => x.Id)
                 .ToList();
         }
+        public List<Employee> GetByEmail(string email)
+        {
+            return context.Employee
+                .Where(x => x.Email.Contains(email))
+                .OrderBy(x => x.Id)
+                .ToList();
+        }
         public List<Employee> GetByIp(string ip)
         {
             return context.Employee
