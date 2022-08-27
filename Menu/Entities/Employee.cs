@@ -101,7 +101,8 @@ namespace Menu.Entities
         #region Get Employee by Gender
         public static void GetEmployeeByGender()
         {
-            Console.Write("Insert Employee Gender: ");
+            Console.Write("Select Employee Gender: ");
+            Thread.Sleep(3000);
             string gender = Prompt.Select<EnumGenders>("Gender: ").ToString();
             string url = $"http://localhost:5186/getallg/{gender}";
             GetEmployeeBy(gender, url);
